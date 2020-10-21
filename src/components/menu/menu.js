@@ -5,7 +5,7 @@ import Basket from '../basket';
 import { connect } from 'react-redux';
 import styles from './menu.module.css';
 import Loader from '../loader';
-import { loadProducts, loadRestaurants } from '../../redux/actions';
+import { loadProducts } from '../../redux/actions';
 import {
   productsLoadingSelector,
   productsLoadedSelector,
