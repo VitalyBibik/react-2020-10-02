@@ -6,19 +6,14 @@ import Banner from '../banner';
 import Rate from '../rate';
 import Tabs from '../tabs';
 import { connect } from 'react-redux';
-import {
-  restaurantAverageRatingSelector,
-  restaurantReviewsSelector,
-} from '../../redux/selectors';
+import { averageRatingSelector } from '../../redux/selectors';
 
-const Restaurant = ({ restaurant, averageRating }) => {
-  const { name, menu, reviews, id } = restaurant;
-
+const Restaurant = ({ id, name, menu, reviews, averageRating }) => {
   const tabs = [
     { title: 'Menu', content: <Menu menu={menu} /> },
     {
       title: 'Reviews',
-      content: <Reviews reviewIds={reviews} restaurantId={id} />,
+      content: <Reviews reviews={reviews} restaurantId={id} />,
     },
   ];
 
@@ -33,16 +28,13 @@ const Restaurant = ({ restaurant, averageRating }) => {
 };
 
 Restaurant.propTypes = {
-  restaurant: PropTypes.shape({
-    name: PropTypes.string,
-    menu: PropTypes.array,
-    reviews: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  }).isRequired,
+  id: PropTypes.string,
+  name: PropTypes.string,
+  menu: PropTypes.array,
+  reviews: PropTypes.array,
+  averageRating: PropTypes.number,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  reviews: restaurantReviewsSelector(state, ownProps),
-  averageRating: restaurantAverageRatingSelector(state, ownProps),
-});
-
-export default connect(mapStateToProps)(Restaurant);
+export default connect((state, props) => ({
+  averageRating: averageRatingSelector(state, props),
+}))(Restaurant);

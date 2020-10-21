@@ -1,25 +1,49 @@
-import { normalizedRestaurants } from '../../fixtures';
-import { ADD_REVIEW } from '../constants';
+import produce from 'immer';
+import {
+  ADD_REVIEW,
+  FAILURE,
+  LOAD_RESTAURANTS,
+  REQUEST,
+  SUCCESS,
+} from '../constants';
+import { arrToMap } from '../utils';
 
-const defaultRestaurants = normalizedRestaurants.reduce(
-  (acc, restaurant) => ({ ...acc, [restaurant.id]: restaurant }),
-  {}
-);
-export default (restaurants = defaultRestaurants, action) => {
-  const { type, payload } = action;
+const initialState = {
+  entities: {},
+  loading: false,
+  loaded: false,
+  error: null,
+};
+
+export default (state = initialState, action) => {
+  const { type, payload, reviewId, response, error } = action;
 
   switch (type) {
-    case ADD_REVIEW:
-      const restaurantId = payload.values.restaurant;
-      const { reviewId } = payload;
+    case LOAD_RESTAURANTS + REQUEST:
       return {
-        ...restaurants,
-        [restaurantId]: {
-          ...restaurants[restaurantId],
-          reviews: [...restaurants[restaurantId].reviews, reviewId],
-        },
+        ...state,
+        loading: true,
+        error: null,
       };
+    case LOAD_RESTAURANTS + SUCCESS:
+      return {
+        ...state,
+        entities: arrToMap(response),
+        loading: false,
+        loaded: true,
+      };
+    case LOAD_RESTAURANTS + FAILURE:
+      return {
+        ...state,
+        loading: false,
+        loaded: false,
+        error,
+      };
+    case ADD_REVIEW:
+      return produce(state, (draft) => {
+        draft.entities[payload.restaurantId].reviews.push(reviewId);
+      });
     default:
-      return restaurants;
+      return state;
   }
 };

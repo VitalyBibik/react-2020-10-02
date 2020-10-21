@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import useForm from '../../../hooks/use-form';
 
 import Rate from '../../rate';
@@ -7,20 +8,14 @@ import { connect } from 'react-redux';
 import Button from '../../button';
 import { addReview } from '../../../redux/actions';
 
-const INITIAL_VALUES = { name: '', text: '', rate: 5 };
+const INITIAL_VALUES = { name: '', text: '', rating: 5 };
 
-const ReviewForm = ({ onSubmit, restaurantId }) => {
+const ReviewForm = ({ onSubmit }) => {
   const { values, handlers, reset } = useForm(INITIAL_VALUES);
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    values.rating = values.rate;
-    values.restaurant = restaurantId;
-    delete values.rate;
-    if (values.name === '') {
-      values.name = 'Anonymous';
-    }
-    onSubmit(values, restaurantId);
+    onSubmit(values);
     reset();
   };
 
@@ -45,7 +40,7 @@ const ReviewForm = ({ onSubmit, restaurantId }) => {
         <div className={styles.rateWrap}>
           <span>Rating: </span>
           <span>
-            <Rate {...handlers.rate} />
+            <Rate {...handlers.rating} />
           </span>
         </div>
         <div className={styles.publish}>
@@ -58,8 +53,11 @@ const ReviewForm = ({ onSubmit, restaurantId }) => {
   );
 };
 
-export default connect(null, (dispatch) => ({
-  onSubmit: (values) => {
-    dispatch(addReview(values));
-  },
+ReviewForm.propTypes = {
+  restaurantId: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+export default connect(null, (dispatch, props) => ({
+  onSubmit: (review) => dispatch(addReview(review, props.restaurantId)),
 }))(ReviewForm);

@@ -4,10 +4,18 @@ import Review from './review';
 import ReviewForm from './review-form';
 import styles from './reviews.module.css';
 
-const Reviews = ({ reviewIds, restaurantId }) => {
+import { loadReviews } from '../../redux/actions';
+import { connect } from 'react-redux';
+import { useEffect } from 'react';
+
+const Reviews = ({ reviews, restaurantId, loadReviews }) => {
+  useEffect(() => {
+    loadReviews(restaurantId);
+  }, [restaurantId]); // eslint-disable-line
+
   return (
     <div className={styles.reviews}>
-      {reviewIds.map((id) => (
+      {reviews.map((id) => (
         <Review key={id} id={id} />
       ))}
       <ReviewForm restaurantId={restaurantId} />
@@ -16,7 +24,8 @@ const Reviews = ({ reviewIds, restaurantId }) => {
 };
 
 Reviews.propTypes = {
-  reviewIds: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  restaurantId: PropTypes.string.isRequired,
+  reviews: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 };
 
-export default Reviews;
+export default connect(null, { loadReviews })(Reviews);
