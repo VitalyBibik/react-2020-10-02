@@ -1,11 +1,4 @@
-import produce from 'immer';
-import {
-  ADD_REVIEW,
-  FAILURE,
-  LOAD_PRODUCTS,
-  REQUEST,
-  SUCCESS,
-} from '../constants';
+import { FAILURE, LOAD_PRODUCTS, REQUEST, SUCCESS } from '../constants';
 import { arrToMap } from '../utils';
 
 const initialState = {
