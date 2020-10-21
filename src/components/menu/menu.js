@@ -9,9 +9,6 @@ import { loadProducts, loadRestaurants } from '../../redux/actions';
 import {
   productsLoadingSelector,
   productsLoadedSelector,
-  restaurantsListSelector,
-  restaurantsLoadingSelector,
-  restaurantsLoadedSelector,
 } from '../../redux/selectors';
 
 class Menu extends React.Component {
