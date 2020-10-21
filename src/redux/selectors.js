@@ -1,12 +1,15 @@
 import { createSelector } from 'reselect';
-import { getById } from './utils';
+import { arrToMap, getById } from './utils';
 
 const restaurantsSelector = (state) => state.restaurants.entities;
 const orderSelector = (state) => state.order;
-const productsSelector = (state) => state.products;
+const productsSelector = (state) => state.products.entities;
 
 export const restaurantsLoadingSelector = (state) => state.restaurants.loading;
 export const restaurantsLoadedSelector = (state) => state.restaurants.loaded;
+
+export const productsLoadingSelector = (state) => state.products.loading;
+export const productsLoadedSelector = (state) => state.products.loaded;
 
 export const orderProductsSelector = createSelector(
   productsSelector,
@@ -39,6 +42,8 @@ export const restaurantsListSelector = createSelector(
 export const productAmountSelector = getById(orderSelector, 0);
 export const productSelector = getById(productsSelector);
 const reviewSelector = getById(reviewsSelector);
+
+export const productsListSelector = arrToMap(productsSelector);
 
 export const reviewWitUserSelector = createSelector(
   reviewSelector,
