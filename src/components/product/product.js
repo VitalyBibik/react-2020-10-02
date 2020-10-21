@@ -13,7 +13,6 @@ const Product = ({ product, amount, increment, decrement, fetchData }) => {
   useEffect(() => {
     fetchData && fetchData(product.id);
   }, []); // eslint-disable-line
-
   return (
     <div className={styles.product} data-id="product">
       <div className={styles.content}>
