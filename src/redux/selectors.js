@@ -11,6 +11,17 @@ export const restaurantsLoadedSelector = (state) => state.restaurants.loaded;
 export const productsLoadingSelector = (state) => state.products.loading;
 export const productsLoadedSelector = (state) => state.products.loaded;
 
+export const usersLoadingSelector = (state) => state.users.loading;
+export const usersLoadedSelector = (state) => state.users.loaded;
+
+export const reviewsLoadingSelector = (state) => state.reviews.loading;
+export const reviewsLoadedSelector = (state) => state.reviews.loaded;
+
+export const productsIdsListSelector = createSelector(
+  productsSelector,
+  Object.keys
+);
+
 export const orderProductsSelector = createSelector(
   productsSelector,
   orderSelector,
@@ -33,7 +44,7 @@ export const totalSelector = createSelector(
 );
 
 const reviewsSelector = (state) => state.reviews;
-const usersSelector = (state) => state.users;
+const usersSelector = (state) => state.users.entities;
 
 export const restaurantsListSelector = createSelector(
   restaurantsSelector,

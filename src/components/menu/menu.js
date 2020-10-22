@@ -8,6 +8,7 @@ import Loader from '../loader';
 import { loadProducts } from '../../redux/actions';
 import {
   productsLoadingSelector,
+  productsIdsListSelector,
   productsLoadedSelector,
 } from '../../redux/selectors';
 
@@ -63,9 +64,10 @@ class Menu extends React.Component {
 }
 
 export default connect(
-  (state) => ({
-    loading: productsLoadingSelector(state),
-    loaded: productsLoadedSelector(state),
+  (state, ownProps) => ({
+    menu: productsIdsListSelector(state),
+    loading: productsLoadingSelector(state, ownProps),
+    loaded: productsLoadedSelector(state, ownProps),
   }),
   { loadProducts }
 )(Menu);

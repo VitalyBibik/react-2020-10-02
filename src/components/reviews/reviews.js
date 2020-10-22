@@ -3,16 +3,19 @@ import PropTypes from 'prop-types';
 import Review from './review';
 import ReviewForm from './review-form';
 import styles from './reviews.module.css';
-
-import { loadReviews } from '../../redux/actions';
+import Loader from '../loader';
+import { loadUsers, loadReviews } from '../../redux/actions';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 
-const Reviews = ({ reviews, restaurantId, loadReviews }) => {
+import { usersLoadedSelector } from '../../redux/selectors';
+
+const Reviews = ({ reviews, restaurantId, loadReviews, loadUsers, loaded }) => {
   useEffect(() => {
+    loadUsers();
     loadReviews(restaurantId);
   }, [restaurantId]); // eslint-disable-line
-
+  if (!loaded) return <Loader />;
   return (
     <div className={styles.reviews}>
       {reviews.map((id) => (
@@ -28,4 +31,8 @@ Reviews.propTypes = {
   reviews: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 };
 
-export default connect(null, { loadReviews })(Reviews);
+const mapStateToProps = (state) => ({
+  loaded: usersLoadedSelector(state),
+});
+
+export default connect(mapStateToProps, { loadReviews, loadUsers })(Reviews);
