@@ -10,12 +10,20 @@ import './basket.css';
 import BasketRow from './basket-row';
 import BasketItem from './basket-item';
 import Button from '../button';
-import { orderProductsSelector, totalSelector } from '../../redux/selectors';
+import Loader from '../loader';
+import {
+  orderProductsSelector,
+  totalSelector,
+  checkoutMatchPageSelector,
+  orderLoadingSelector,
+} from '../../redux/selectors';
+import { makeOrder } from '../../redux/actions';
 import { UserConsumer } from '../../context/user-context';
+import { useMoney } from '../../hooks/use-money';
 
-function Basket({ title = 'Basket', total, orderProducts }) {
-  // console.log('render Basket');
-  // const { name } = useContext(userContext);
+function Basket({ total, orderProducts, checkoutMatch, makeOrder, loading }) {
+  const m = useMoney();
+
   if (!total) {
     return (
       <div className={styles.basket}>
@@ -26,9 +34,12 @@ function Basket({ title = 'Basket', total, orderProducts }) {
 
   return (
     <div className={styles.basket}>
+      {loading && (
+        <div className={styles.loading}>
+          <Loader />
+        </div>
+      )}
       <h4 className={styles.title}>
-        {/* {`${name}'s Basket`} */}
-        {/* <UserConsumer children={({ name }) => `${name}'s Basket`} /> */}
         <UserConsumer>{({ name }) => `${name}'s Basket`}</UserConsumer>
       </h4>
       <TransitionGroup>
@@ -48,14 +59,20 @@ function Basket({ title = 'Basket', total, orderProducts }) {
         ))}
       </TransitionGroup>
       <hr className={styles.hr} />
-      <BasketRow label="Sub-total" content={`${total} $`} />
+      <BasketRow label="Sub-total" content={m(total)} />
       <BasketRow label="Delivery costs:" content="FREE" />
-      <BasketRow label="total" content={`${total} $`} bold />
-      <Link to="/checkout">
-        <Button primary block>
-          checkout
+      <BasketRow label="total" content={m(total)} bold />
+      {checkoutMatch ? (
+        <Button primary block onClick={makeOrder}>
+          make order
         </Button>
-      </Link>
+      ) : (
+        <Link to="/checkout">
+          <Button primary block>
+            go to checkout
+          </Button>
+        </Link>
+      )}
     </div>
   );
 }
@@ -63,6 +80,8 @@ function Basket({ title = 'Basket', total, orderProducts }) {
 const mapStateToProps = createStructuredSelector({
   total: totalSelector,
   orderProducts: orderProductsSelector,
+  checkoutMatch: checkoutMatchPageSelector,
+  loading: orderLoadingSelector,
 });
 
-export default connect(mapStateToProps)(Basket);
+export default connect(mapStateToProps, { makeOrder })(Basket);

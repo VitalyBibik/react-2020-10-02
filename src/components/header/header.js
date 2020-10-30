@@ -1,16 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import Logo from './logo';
+import CurrencySwitcher from './currency-switcher';
 import styles from './header.module.css';
-import { userContext } from '../../context/user-context';
 
 const Header = () => {
-  const { name, setName } = useContext(userContext);
-
   return (
-    <header className={styles.header} onClick={() => setName('Lena')}>
+    <header className={styles.header}>
       <Logo />
-      <h2>{name}</h2>
+      <CurrencySwitcher />
     </header>
   );
 };
